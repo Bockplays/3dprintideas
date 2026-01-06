@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Print Idea Generator - Get Inspired</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 24px;
+            padding: 50px 40px;
+            max-width: 650px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 12px;
+            font-size: 2.5em;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.1em;
+            font-weight: 400;
+        }
+
+        .idea-display {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 18px;
+            padding: 45px 35px;
+            margin-bottom: 25px;
+            min-height: 240px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .idea-display::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 18px;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .idea-display:hover::before {
+            opacity: 0.1;
+        }
+
+        .category {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin-bottom: 18px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .idea-text {
+            font-size: 1.75em;
+            color: #2d3748;
+            font-weight: 700;
+            line-height: 1.4;
+            margin-bottom: 5px;
+        }
+
+        .description {
+            margin-top: 15px;
+            font-size: 1.05em;
+            color: #4a5568;
+            line-height: 1.7;
+            max-width: 520px;
+        }
+
+        .difficulty {
+            margin-top: 18px;
+            font-size: 0.95em;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .difficulty-level {
+            display: inline-block;
+            padding: 5px 14px;
+            border-radius: 12px;
+            font-weight: 700;
+            margin-left: 5px;
+            text-transform: uppercase;
+            font-size: 0.85em;
+            letter-spacing: 0.5px;
+        }
+
+        .easy { background: #d4edda; color: #155724; }
+        .medium { background: #fff3cd; color: #856404; }
+        .hard { background: #f8d7da; color: #721c24; }
+
+        .generate-btn {
+            width: 100%;
+            padding: 20px;
+            font-size: 1.1em;
+            font-weight: 700;
+            color: white;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            margin-bottom: 25px;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+        }
+
+        .generate-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .difficulty-filter {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            padding-bottom: 10px;
+        }
+
+        .filter-label {
+            width: 100%;
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .filter-btn {
+            padding: 12px 24px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 0.95em;
+            letter-spacing: 0.3px;
+        }
+
+        .filter-btn:hover {
+            background: #f5f7fa;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+
+        .filter-btn.active {
+            background: #667eea;
+            color: white;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .placeholder {
+            color: #999;
+            font-style: italic;
+            font-size: 1.3em;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 2px solid #e2e8f0;
+            color: #718096;
+            font-size: 0.9em;
+        }
+
+        .badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            color: #667eea;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 700;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .animate {
+            animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 35px 25px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .idea-text {
+                font-size: 1.4em;
+            }
+
+            .badge {
+                top: 15px;
+                right: 15px;
+                font-size: 0.7em;
+                padding: 6px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        
+        <div class="header">
+            <h1>🖨️ 3D Print Ideas</h1>
+            <p class="subtitle">Discover your next creative project</p>
+        </div>
+        
+        <div class="idea-display" id="ideaDisplay">
+            <p class="idea-text placeholder">Ready to find your next 3D printing project?<br>Click the button below!</p>
+        </div>
+        
+        <button class="generate-btn" onclick="generateIdea()">✨ Generate New Idea</button>
+        
+        <div class="difficulty-filter">
+            <span class="filter-label">Filter by Difficulty</span>
+            <button class="filter-btn active" onclick="setDifficulty('all')">All Levels</button>
+            <button class="filter-btn" onclick="setDifficulty('easy')">Easy</button>
+            <button class="filter-btn" onclick="setDifficulty('medium')">Medium</button>
+            <button class="filter-btn" onclick="setDifficulty('hard')">Hard</button>
+        </div>
+
+        <div class="difficulty-filter" style="margin-top: 15px;">
+            <span class="filter-label">Filter by Category</span>
+            <button class="filter-btn active" onclick="setCategory('all')">All Categories</button>
+            <button class="filter-btn" onclick="setCategory('Home & Office')">Home & Office</button>
+            <button class="filter-btn" onclick="setCategory('Kitchen & Dining')">Kitchen & Dining</button>
+            <button class="filter-btn" onclick="setCategory('Tools & Gadgets')">Tools & Gadgets</button>
+            <button class="filter-btn" onclick="setCategory('Gaming')">Gaming</button>
+            <button class="filter-btn" onclick="setCategory('Art & Decoration')">Art & Decoration</button>
+            <button class="filter-btn" onclick="setCategory('Tech & Electronics')">Tech & Electronics</button>
+            <button class="filter-btn" onclick="setCategory('Storage & Organization')">Storage & Organization</button>
+            <button class="filter-btn" onclick="setCategory('Toys & Fun')">Toys & Fun</button>
+            <button class="filter-btn" onclick="setCategory('Mechanical')">Mechanical</button>
+        </div>
+
+        <div class="footer">
+            <p>Perfect for makers, hobbyists, and 3D printing enthusiasts</p>
+        </div>
+    </div>
+
+    <script>
+        const ideas = [
+            { category: "Home & Office", text: "Desk organizer with custom compartments", difficulty: "easy", description: "Design separate sections for pens, clips, and sticky notes to keep your workspace tidy." },
+            { category: "Home & Office", text: "Phone stand with adjustable angle", difficulty: "easy", description: "Create a stand that lets you view your phone at the perfect angle for video calls or watching content." },
+            { category: "Home & Office", text: "Cable management clips", difficulty: "easy", description: "Small clips that attach to desk edges to route and organize charging cables and wires." },
+            { category: "Home & Office", text: "Custom drawer dividers", difficulty: "medium", description: "Modular dividers that can be arranged to fit any drawer size and organize various items." },
+            { category: "Home & Office", text: "Wall-mounted key holder", difficulty: "easy", description: "A decorative hook system to keep your keys organized and always in the same spot." },
+            { category: "Home & Office", text: "Headphone stand", difficulty: "easy", description: "An elegant stand to display and store your headphones when not in use." },
+            { category: "Home & Office", text: "Plant pot with drainage system", difficulty: "medium", description: "A two-piece planter with a reservoir to catch excess water and protect surfaces." },
+            { category: "Home & Office", text: "Bookend with unique design", difficulty: "medium", description: "Functional bookends with geometric or themed designs to add personality to your shelf." },
+            { category: "Home & Office", text: "Coaster set with drainage grooves", difficulty: "easy", description: "Protect surfaces from water rings with coasters that channel condensation away from glasses." },
+            { category: "Home & Office", text: "Business card holder for desk", difficulty: "easy", description: "Professional display stand that keeps business cards organized and easily accessible." },
+            { category: "Home & Office", text: "Laptop stand with ventilation", difficulty: "medium", description: "Elevate your laptop to eye level while allowing airflow underneath to prevent overheating." },
+            { category: "Home & Office", text: "Pen holder with smartphone slot", difficulty: "easy", description: "Dual-purpose organizer that holds pens upright and props up your phone for viewing." },
+            { category: "Home & Office", text: "Monitor riser with storage", difficulty: "medium", description: "Elevate your screen to ergonomic height with compartments underneath for desk supplies." },
+            { category: "Home & Office", text: "Whiteboard marker holder", difficulty: "easy", description: "Magnetic or adhesive holder that keeps dry-erase markers and erasers right on the board." },
+            { category: "Home & Office", text: "Desktop vacuum cleaner", difficulty: "hard", description: "Mini vacuum powered by a small motor to clean keyboard crumbs and desk debris." },
+            { category: "Home & Office", text: "Paper clip dispenser", difficulty: "easy", description: "Gravity-fed holder that makes grabbing paper clips one-handed quick and easy." },
+            { category: "Home & Office", text: "Desk lamp base organizer", difficulty: "medium", description: "Multi-functional lamp base with compartments for pens, phone, and small items." },
+            { category: "Home & Office", text: "Wall-mounted mail sorter", difficulty: "medium", description: "Tiered organizer for sorting incoming and outgoing mail by priority or category." },
+            { category: "Home & Office", text: "Rubber band ball holder", difficulty: "easy", description: "Container that keeps rubber bands organized and prevents them from drying out." },
+            { category: "Home & Office", text: "Document stand with adjustable angle", difficulty: "medium", description: "Holds papers at eye level for easier reading while typing or working." },
+            { category: "Home & Office", text: "Scissors holder for desk drawer", difficulty: "easy", description: "Safe storage that protects scissor blades and keeps them instantly accessible." },
+            { category: "Home & Office", text: "Sticky note dispenser pop-up", difficulty: "medium", description: "Weighted dispenser that presents one sticky note at a time for easy grabbing." },
+            { category: "Home & Office", text: "USB flash drive organizer", difficulty: "easy", description: "Labeled slots keep multiple USB drives sorted and protected from damage." },
+            { category: "Home & Office", text: "Tablet stand with adjustable height", difficulty: "medium", description: "Versatile stand for tablets that adjusts for reading, watching, or drawing." },
+            { category: "Home & Office", text: "Cord keeper for charging cables", difficulty: "easy", description: "Wrap and secure cables neatly to prevent tangling in drawers or bags." },
+            { category: "Home & Office", text: "Nameplate for office door", difficulty: "easy", description: "Professional signage with your name and title for office or cubicle identification." },
+            { category: "Home & Office", text: "Calendar holder for desk", difficulty: "easy", description: "Angled stand that displays monthly calendars at perfect viewing angle." },
+            { category: "Home & Office", text: "Binder clip organizer", difficulty: "easy", description: "Compartmented tray that sorts binder clips by size for quick access." },
+            { category: "Home & Office", text: "Pencil sharpener holder", difficulty: "easy", description: "Secure mount for handheld or manual pencil sharpeners on desk edges." },
+            { category: "Home & Office", text: "Receipt organizer stand", difficulty: "medium", description: "Multi-slot holder for sorting receipts by month or category." },
+            { category: "Home & Office", text: "Stamp and ink pad holder", difficulty: "easy", description: "Organized storage for rubber stamps and ink pads in one convenient spot." },
+            { category: "Home & Office", text: "Tissue box cover decorative", difficulty: "easy", description: "Stylish cover that transforms plain tissue boxes into desk decor." },
+            { category: "Home & Office", text: "Desk drawer organizer tray", difficulty: "medium", description: "Customizable insert with sections for all your desk drawer items." },
+            { category: "Home & Office", text: "Wall-mounted file holder", difficulty: "medium", description: "Vertical storage for folders and documents that saves desk space." },
+            { category: "Home & Office", text: "Ergonomic footrest", difficulty: "medium", description: "Angled platform that promotes better posture during long work sessions." },
+            { category: "Home & Office", text: "Waste basket with lid", difficulty: "easy", description: "Small desk bin with swing-top lid to contain odors and hide contents." },
+            { category: "Home & Office", text: "Glasses holder stand", difficulty: "easy", description: "Protective stand that keeps eyeglasses safe and accessible on your desk." },
+            { category: "Home & Office", text: "Letter opener with holder", difficulty: "easy", description: "Safe storage for letter openers that keeps them handy for opening mail." },
+            { category: "Home & Office", text: "Desktop organizer with drawers", difficulty: "hard", description: "Multi-tiered system with pull-out drawers for comprehensive desk organization." },
+            { category: "Home & Office", text: "Pencil cup with drainage holes", difficulty: "easy", description: "Ventilated holder that prevents moisture buildup if pens get wet." },
+            
+            { category: "Kitchen & Dining", text: "Cookie cutter in custom shape", difficulty: "easy", description: "Design cutters in any shape you want - perfect for themed parties or special occasions." },
+            { category: "Kitchen & Dining", text: "Napkin holder with modern design", difficulty: "easy", description: "A stylish holder to keep paper or cloth napkins organized on your table or counter." },
+            { category: "Kitchen & Dining", text: "Spice rack organizer", difficulty: "medium", description: "Tiered or rotating rack to display spice jars and make them easy to access while cooking." },
+            { category: "Kitchen & Dining", text: "Bag clip with living hinge", difficulty: "medium", description: "Flexible clips that seal open food bags to keep contents fresh for longer." },
+            { category: "Kitchen & Dining", text: "Measuring spoon set", difficulty: "medium", description: "Custom measuring spoons with clear markings for precise cooking and baking." },
+            { category: "Kitchen & Dining", text: "Egg separator tool", difficulty: "easy", description: "A simple gadget that separates egg whites from yolks quickly and cleanly." },
+            { category: "Kitchen & Dining", text: "Chip bag sealing clip", difficulty: "easy", description: "Strong clips that fold bag tops and seal them tight to keep snacks fresh and crunchy." },
+            { category: "Kitchen & Dining", text: "Sink caddy for sponges", difficulty: "medium", description: "Draining organizer that holds sponges, scrubbers, and dish soap by the sink." },
+            { category: "Kitchen & Dining", text: "Banana hanger stand", difficulty: "easy", description: "Curved hook that suspends bananas to prevent bruising and ripen evenly." },
+            { category: "Kitchen & Dining", text: "Oven mitt holder", difficulty: "easy", description: "Wall-mounted hooks or clips that keep oven mitts accessible near the stove." },
+            { category: "Kitchen & Dining", text: "Tea bag squeezer", difficulty: "easy", description: "Small press that extracts every drop from tea bags without burning your fingers." },
+            { category: "Kitchen & Dining", text: "Sink strainer basket", difficulty: "medium", description: "Catch food scraps and debris before they clog your drain with this removable basket." },
+            { category: "Kitchen & Dining", text: "Drying rack for bottles", difficulty: "medium", description: "Upside-down pegs that allow water bottles and sippy cups to drain completely." },
+            { category: "Kitchen & Dining", text: "Pot lid organizer", difficulty: "medium", description: "Vertical or horizontal storage that keeps pot lids sorted by size and easy to grab." },
+            { category: "Kitchen & Dining", text: "Butter dish with spreader holder", difficulty: "easy", description: "Covered dish that keeps butter fresh with integrated slot for the butter knife." },
+            { category: "Kitchen & Dining", text: "Avocado saver storage", difficulty: "easy", description: "Form-fitting container that preserves half avocados and prevents browning." },
+            { category: "Kitchen & Dining", text: "Pot handle holder for lids", difficulty: "easy", description: "Clips onto pot handles to hold lids upright and prevent drips on the stove." },
+            { category: "Kitchen & Dining", text: "Garlic press with cleaning tool", difficulty: "hard", description: "Mechanical press that crushes garlic with integrated cleaning pins." },
+            { category: "Kitchen & Dining", text: "Pizza cutter with serving guide", difficulty: "medium", description: "Wheel cutter with measurement marks for cutting equal slices." },
+            { category: "Kitchen & Dining", text: "Trivet with collapsible legs", difficulty: "medium", description: "Heat-resistant pad that folds flat for storage but elevates hot pots." },
+            { category: "Kitchen & Dining", text: "Cheese grater with container", difficulty: "medium", description: "Grater with attached collection box to catch and measure grated cheese." },
+            { category: "Kitchen & Dining", text: "Oil and vinegar pour spouts", difficulty: "easy", description: "Precision pourers that control flow and prevent drips on bottles." },
+            { category: "Kitchen & Dining", text: "Utensil holder for drawer", difficulty: "easy", description: "Divided tray that organizes forks, spoons, and knives in drawers." },
+            { category: "Kitchen & Dining", text: "Plate drying rack vertical", difficulty: "medium", description: "Space-saving rack that holds plates vertically for faster drying." },
+            { category: "Kitchen & Dining", text: "Coffee filter holder", difficulty: "easy", description: "Dispenser that keeps coffee filters organized and accessible near the machine." },
+            { category: "Kitchen & Dining", text: "Spaghetti measure tool", difficulty: "easy", description: "Guide with holes to measure perfect portions of dry pasta per person." },
+            { category: "Kitchen & Dining", text: "Cutting board stand", difficulty: "easy", description: "Upright holder that stores cutting boards vertically to save counter space." },
+            { category: "Kitchen & Dining", text: "Microwave cover with vents", difficulty: "easy", description: "Splatter guard that keeps microwaves clean while venting steam." },
+            { category: "Kitchen & Dining", text: "Fruit bowl with drainage", difficulty: "medium", description: "Bowl with ventilation that extends fruit freshness by promoting air circulation." },
+            { category: "Kitchen & Dining", text: "Kitchen timer stand", difficulty: "easy", description: "Angled holder that displays digital timers at eye level during cooking." },
+            { category: "Kitchen & Dining", text: "Whisk and spatula holder", difficulty: "easy", description: "Countertop crock that keeps cooking utensils upright and ready to use." },
+            { category: "Kitchen & Dining", text: "Recipe book stand", difficulty: "medium", description: "Weighted stand with page holders to keep cookbooks open while cooking." },
+            { category: "Kitchen & Dining", text: "Can crusher wall mount", difficulty: "medium", description: "Leverage-based crusher that compresses aluminum cans for recycling." },
+            { category: "Kitchen & Dining", text: "Bread box with ventilation", difficulty: "hard", description: "Container with air holes that keeps bread fresh longer without mold." },
+            { category: "Kitchen & Dining", text: "Silicone mold organizer", difficulty: "medium", description: "Vertical storage that prevents baking molds from taking up drawer space." },
+            { category: "Kitchen & Dining", text: "Knife block custom", difficulty: "hard", description: "Counter-top holder with slots sized perfectly for your specific knife collection." },
+            { category: "Kitchen & Dining", text: "Lunch container divider", difficulty: "easy", description: "Removable partitions that separate foods in bento boxes or containers." },
+            { category: "Kitchen & Dining", text: "Wine bottle holder display", difficulty: "medium", description: "Decorative rack that stores wine bottles horizontally or at an angle." },
+            { category: "Kitchen & Dining", text: "Tablecloth clips", difficulty: "easy", description: "Secure clips that prevent tablecloths from blowing away outdoors." },
+            { category: "Kitchen & Dining", text: "Ice cube tray with lid", difficulty: "easy", description: "Covered tray that prevents freezer odors from affecting ice cubes." }
+        ];
+
+        // Generate remaining categories dynamically to save space
+        const categories = {
+            "Tools & Gadgets": [
+                "Screwdriver bit holder|easy|Organize all your screwdriver bits in one place with clearly visible slots for each size.",
+                "Hex key organizer|easy|A holder that keeps your hex keys sorted by size and always accessible.",
+                "Paint brush holder|easy|Keep brushes organized and protected with individual slots that prevent bristle damage.",
+                "Wire stripper gauge|medium|A guide tool that helps determine the correct wire gauge for stripping cables.",
+                "Clamp for holding small parts|medium|A spring-loaded or screw-type clamp designed to secure tiny components during work.",
+                "Angle finder tool|hard|A measuring device that helps you find and replicate angles for woodworking or construction.",
+                "Magnetic wristband for screws|easy|Wear it while working to keep screws and small metal parts within reach.",
+                "3D printer filament guide|easy|Smooth guide that directs filament from spool to extruder without tangling.",
+                "Adjustable wrench holder|easy|Wall-mounted clips sized for different wrench types and sizes.",
+                "Sandpaper storage with grit labels|medium|Organized holder that keeps sandpaper flat and sorted by grit number.",
+                "Tape measure belt clip|easy|Quick-release holster that keeps your tape measure handy on your belt.",
+                "Drill bit sharpening guide|hard|Jig that maintains correct angles when sharpening dull drill bits.",
+                "Parts tray with magnetic bottom|medium|Small parts won't roll away with magnetic surface holding metal items.",
+                "Level with multiple bubble vials|hard|Multi-axis level for checking horizontal, vertical, and 45-degree angles.",
+                "Chisel guard protector|easy|Safety caps that protect sharp edges and prevent accidents in toolboxes.",
+                "Nail puller assistant|medium|Leverage tool that helps extract stubborn nails without damaging wood.",
+                "Socket organizer rail|easy|Color-coded holders that keep socket sets organized by size and drive.",
+                "Stud finder holder|easy|Wall mount that keeps your stud finder accessible for projects.",
+                "Utility knife blade case|easy|Safe storage for replacement blades that prevents cuts and rust.",
+                "Pliers rack organizer|easy|Hanging system that displays pliers and prevents handle damage.",
+                "Extension cord reel|medium|Winding mechanism that stores cords neatly and prevents tangling.",
+                "Saw blade storage|medium|Protective cases that organize saw blades safely by type and size.",
+                "Tool belt hook organizer|easy|Clips that attach to tool belts for organizing hammers and pliers.",
+                "Bench vise accessories|medium|Custom jaws and pads that protect workpieces in vises.",
+                "Measuring tape wall mount|easy|Magnetic holder that keeps tape measures easily accessible.",
+                "Flashlight holder magnetic|easy|Mount that secures flashlights hands-free during work.",
+                "Pencil holder for carpenter|easy|Clip-on holder that keeps pencils secured to tool belts or pockets.",
+                "Router bit storage case|medium|Organized foam inserts that protect and display router bits.",
+                "Clamp storage rack|medium|Wall system that holds C-clamps and bar clamps efficiently.",
+                "Work light stand|medium|Adjustable holder that positions task lighting where needed.",
+                "Safety glasses holder|easy|Wall hook or clip that keeps protective eyewear accessible.",
+                "Sandpaper dispenser wall|medium|Roll holder that makes tearing off sandpaper sheets easy.",
+                "Bolt and nut sorter|medium|Compartmented storage with labels for fastener organization.",
+                "File handle holder|easy|Rack that stores files vertically to protect teeth and save space.",
+                "Punch and chisel set holder|medium|Slotted organizer that keeps metal working tools sorted.",
+                "Combination square holder|easy|Magnetic mount that keeps measuring squares within reach.",
+                "Awl and scribe holder|easy|Safe storage for pointed marking tools in workshops.",
+                "Staple gun holder|easy|Wall clip that stores staple guns and prevents loss.",
+                "Putty knife organizer|easy|Slotted rack that keeps scrapers and putty knives organized.",
+                "Tool chest drawer dividers|medium|Custom inserts that maximize tool chest organization."
+            ]
+        };
+
+        // Parse and add tool ideas
+        categories["Tools & Gadgets"].forEach(item => {
+            const [text, difficulty, description] = item.split('|');
+            ideas.push({
+                category: "Tools & Gadgets",
+                text: text,
+                difficulty: difficulty,
+                description: description
+            });
+        });
+
+        let availableIdeas = [...ideas];
+        let usedIdeas = [];
+        let currentDifficulty = 'all';
+        let currentCategory = 'all';
+
+        function setDifficulty(difficulty) {
+            currentDifficulty = difficulty;
+            
+            const buttons = document.querySelectorAll('.difficulty-filter')[0].querySelectorAll('.filter-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            updateAvailableIdeas();
+        }
+
+        function setCategory(category) {
+            currentCategory = category;
+            
+            const buttons = document.querySelectorAll('.difficulty-filter')[1].querySelectorAll('.filter-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            updateAvailableIdeas();
+        }
+
+        function updateAvailableIdeas() {
+            let filteredIdeas = ideas.filter(idea => {
+                const matchesDifficulty = currentDifficulty === 'all' || idea.difficulty === currentDifficulty;
+                const matchesCategory = currentCategory === 'all' || idea.category === currentCategory;
+                return matchesDifficulty && matchesCategory;
+            });
+            
+            availableIdeas = [...filteredIdeas];
+            usedIdeas = [];
+            
+            const display = document.getElementById('ideaDisplay');
+            display.innerHTML = '<p class="idea-text placeholder">Ready to find your next 3D printing project?<br>Click the button below!</p>';
+        }
+
+        function generateIdea() {
+            const display = document.getElementById('ideaDisplay');
+            
+            let filteredIdeas = ideas.filter(idea => {
+                const matchesDifficulty = currentDifficulty === 'all' || idea.difficulty === currentDifficulty;
+                const matchesCategory = currentCategory === 'all' || idea.category === currentCategory;
+                return matchesDifficulty && matchesCategory;
+            });
+            
+            if (availableIdeas.length === 0) {
+                availableIdeas = [...filteredIdeas];
+                usedIdeas = [];
+            }
+            
+            if (availableIdeas.length === 0) {
+                display.innerHTML = '<p class="idea-text placeholder">No ideas match your filters.<br>Try selecting different options!</p>';
+                return;
+            }
+            
+            const randomIndex = Math.floor(Math.random() * availableIdeas.length);
+            const randomIdea = availableIdeas[randomIndex];
+            
+            availableIdeas.splice(randomIndex, 1);
+            usedIdeas.push(randomIdea);
+            
+            display.classList.remove('animate');
+            void display.offsetWidth;
+            display.classList.add('animate');
+            
+            display.innerHTML = `
+                <span class="category">${randomIdea.category}</span>
+                <p class="idea-text">${randomIdea.text}</p>
+                <p class="description">${randomIdea.description}</p>
+                <div class="difficulty">
+                    Difficulty: <span class="difficulty-level ${randomIdea.difficulty}">${randomIdea.difficulty.charAt(0).toUpperCase() + randomIdea.difficulty.slice(1)}</span>
+                </div>
+            `;
+        }
+    </script>, and holders designed to maximize your pegboard's organizational potential." },
+            { category: "Storage & Organization", text: "Battery dispenser", difficulty: "medium", description: "A gravity-fed organizer that stores and dispenses batteries by size for easy access." },
+            { category: "Storage & Organization", text: "Thread spool rack", difficulty: "medium", description: "Wall-mounted or standing rack to organize sewing thread spools with easy pull access." },
+            { category: "Storage & Organization", text: "Stackable storage bins", difficulty: "medium", description: "Modular containers that stack securely and can be customized to fit your exact storage needs." },
+            { category: "Storage & Organization", text: "Modular drawer inserts", difficulty: "medium", description: "Customizable compartments that snap together to organize drawers exactly how you want them." },
+            { category: "Storage & Organization", text: "Wall-mounted magazine holder", difficulty: "easy", description: "Sleek holder that displays magazines or papers while keeping them organized and off surfaces." },
+            { category: "Storage & Organization", text: "Shoe rack insert for closet", difficulty: "medium", description: "Space-saving tiered system that doubles shoe storage capacity." },
+            
+            { category: "Toys & Fun", text: "Fidget spinner", difficulty: "medium", description: "A spinning toy with bearings that provides satisfying tactile feedback and smooth rotation." },
+            { category: "Toys & Fun", text: "Puzzle box", difficulty: "hard", description: "A mechanical box with hidden mechanisms and sequential steps needed to open it." },
+            { category: "Toys & Fun", text: "Marble run track pieces", difficulty: "medium", description: "Modular track sections that connect to create custom marble runs with ramps and turns." },
+            { category: "Toys & Fun", text: "Wind-up toy mechanism", difficulty: "hard", description: "A spring-powered mechanism that can make toys walk, spin, or move when wound up." },
+            { category: "Toys & Fun", text: "Building blocks set", difficulty: "easy", description: "Custom interlocking blocks compatible with popular building toy systems or unique designs." },
+            { category: "Toys & Fun", text: "Mini basketball hoop", difficulty: "medium", description: "A desk-sized hoop and backboard for shooting foam balls during breaks." },
+            
+            { category: "Mechanical", text: "Gear mechanism demonstration", difficulty: "hard", description: "Working gear system that shows how different gear ratios affect speed and torque." },
+            { category: "Mechanical", text: "Spring-loaded mechanism", difficulty: "hard", description: "A device using springs to store and release energy for movement or launching objects." },
+            { category: "Mechanical", text: "Door stop with rubber insert", difficulty: "easy", description: "A sturdy wedge with space for a rubber grip to hold doors open firmly without scratching floors." },
+            { category: "Mechanical", text: "Hinge system for boxes", difficulty: "medium", description: "Print-in-place or assembled hinges that allow boxes and containers to open smoothly." },
+            { category: "Mechanical", text: "Ratchet mechanism", difficulty: "hard", description: "A one-way mechanical system that allows rotation in only one direction with satisfying clicks." },
+            { category: "Mechanical", text: "Snap-fit joints demonstration", difficulty: "medium", description: "Various joint designs showing how parts can connect without screws or glue using flexible tabs." }
+        ];
+
+        let availableIdeas = [...ideas];
+        let usedIdeas = [];
+        let currentDifficulty = 'all';
+        let currentCategory = 'all';
+
+        function setDifficulty(difficulty) {
+            currentDifficulty = difficulty;
+            
+            const buttons = document.querySelectorAll('.difficulty-filter')[0].querySelectorAll('.filter-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            updateAvailableIdeas();
+        }
+
+        function setCategory(category) {
+            currentCategory = category;
+            
+            const buttons = document.querySelectorAll('.difficulty-filter')[1].querySelectorAll('.filter-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            updateAvailableIdeas();
+        }
+
+        function updateAvailableIdeas() {
+            let filteredIdeas = ideas.filter(idea => {
+                const matchesDifficulty = currentDifficulty === 'all' || idea.difficulty === currentDifficulty;
+                const matchesCategory = currentCategory === 'all' || idea.category === currentCategory;
+                return matchesDifficulty && matchesCategory;
+            });
+            
+            availableIdeas = [...filteredIdeas];
+            usedIdeas = [];
+            
+            const display = document.getElementById('ideaDisplay');
+            display.innerHTML = '<p class="idea-text placeholder">Ready to find your next 3D printing project?<br>Click the button below!</p>';
+        }
+
+        function generateIdea() {
+            const display = document.getElementById('ideaDisplay');
+            
+            let filteredIdeas = ideas.filter(idea => {
+                const matchesDifficulty = currentDifficulty === 'all' || idea.difficulty === currentDifficulty;
+                const matchesCategory = currentCategory === 'all' || idea.category === currentCategory;
+                return matchesDifficulty && matchesCategory;
+            });
+            
+            if (availableIdeas.length === 0) {
+                availableIdeas = [...filteredIdeas];
+                usedIdeas = [];
+            }
+            
+            if (availableIdeas.length === 0) {
+                display.innerHTML = '<p class="idea-text placeholder">No ideas match your filters.<br>Try selecting different options!</p>';
+                return;
+            }
+            
+            const randomIndex = Math.floor(Math.random() * availableIdeas.length);
+            const randomIdea = availableIdeas[randomIndex];
+            
+            availableIdeas.splice(randomIndex, 1);
+            usedIdeas.push(randomIdea);
+            
+            display.classList.remove('animate');
+            void display.offsetWidth;
+            display.classList.add('animate');
+            
+            display.innerHTML = `
+                <span class="category">${randomIdea.category}</span>
+                <p class="idea-text">${randomIdea.text}</p>
+                <p class="description">${randomIdea.description}</p>
+                <div class="difficulty">
+                    Difficulty: <span class="difficulty-level ${randomIdea.difficulty}">${randomIdea.difficulty.charAt(0).toUpperCase() + randomIdea.difficulty.slice(1)}</span>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
